@@ -1,0 +1,142 @@
+﻿<Window x:Class="MapMaker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:src="clr-namespace:MapMaker"
+        Title="Map Maker" Height="720" Width="1250" UseLayoutRounding="True">
+    <Grid MouseMove="Grid_MouseMove">
+        <Grid Background="#FFE2E2E2">
+            <Grid.Resources>
+
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="32"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="400"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="1">
+                <ScrollViewer x:Name="MapScrollViewer" MouseLeftButtonDown="ScrollViewer_MouseLeftButtonDown" HorizontalScrollBarVisibility="Visible">
+                    <Grid x:Name="drawer" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Image x:Name="BackgroundImage" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" Panel.ZIndex="1" Stretch="UniformToFill"/>
+                        <Rectangle x:Name="DrawerRectangle" Fill="#FFB6E694" MouseLeftButtonDown="Rectangle_MouseLeftButtonDown" MouseLeftButtonUp="drawer_MouseLeftButtonUp" Panel.ZIndex="2"></Rectangle>
+                        <Grid x:Name="collisionDrawer" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="4">
+                            <Grid x:Name="collisionDrawerLevel1" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+                            </Grid>
+                            <Grid x:Name="collisionDrawerLevel2" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+                            </Grid>
+                            <Grid x:Name="collisionDrawerLevel3" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </ScrollViewer>
+
+            </Grid>
+
+            <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="1">
+                <Grid x:Name="sourceBoxGrid" Visibility="Hidden">
+                    <ListBox x:Name="mapImageSourceListBox" ItemsSource="{Binding Collection}" MouseDown="mapImageSourceListBox_MouseDown">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Width="100">
+                                    <Label Content="{Binding Id}"/>
+                                    <Image Source="{Binding Location}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+                <Grid x:Name="propertiesGrid" Background="White">
+                    <ComboBox x:Name="gameObjectTypePropertiesComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" SelectionChanged="gameObjectTypePropertiesComboBox_SelectionChanged"/>
+                    <Button x:Name="mapImagePropertiesOKButton" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Margin="0,20,0,0" Click="mapImagePropertiesOKButton_Click"/>
+                    <DataGrid Name="DG" Margin="0,40,0,0"/>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="1">
+                <Button x:Name="addImageResourceButton" Content="Add image resource" HorizontalAlignment="Left" Margin="207,13,-157,0" VerticalAlignment="Top" Width="150" Click="addImageResourceButton_Click"/>
+
+            </Grid>
+
+            <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Background="#FFB0B0B0">
+                <StackPanel Margin="507,2,601,9" Orientation="Horizontal">
+                    <TextBox x:Name="CursorCoordinateMapX" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="60" IsEnabled="False"/>
+                    <Label Content="x" HorizontalAlignment="Left" Margin="0,1,0,0" VerticalAlignment="Top"/>
+
+                    <TextBox x:Name="CursorCoordinateMapY" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="60" IsEnabled="False"/>
+                </StackPanel>
+
+            </Grid>
+            <Button x:Name="ExportButton" Content="Export" Grid.Column="2" HorizontalAlignment="Left" Margin="308,627,0,0" VerticalAlignment="Top" Width="75" Click="ExportButton_Click"/>
+            <CheckBox x:Name="IsPartOfTheBackgroundCheckbox" Content="is part of the background" Grid.Column="2" HorizontalAlignment="Left" Margin="24,113,0,0" VerticalAlignment="Top" IsChecked="True"/>
+            <Grid Grid.Column="2" Margin="40,361,39,163">
+                <Grid x:Name="CollisionGrid" HorizontalAlignment="Left" Height="119" Margin="0,15,0,0" VerticalAlignment="Top" Width="321" Background="White">
+                    <Button x:Name="ChangeToolCollisionButton" Content="Change tool: Collision" HorizontalAlignment="Left" Margin="79,90,0,0" VerticalAlignment="Top" Width="150" Click="ChangeToolCollisionButton_Click"/>
+                    <StackPanel HorizontalAlignment="Left" Height="24" Margin="25,10,0,0" VerticalAlignment="Top" Width="272" Background="#FFDEDEDE" Orientation="Horizontal">
+                        <Label Content="View only: "/>
+                        <CheckBox x:Name="CollisionLevel1CheckBox" Content="Level 1" Checked="CollisionLevel1CheckBox_Checked" Unchecked="CollisionLevel1CheckBox_Unchecked"/>
+                        <CheckBox x:Name="CollisionLevel2CheckBox" Content="Level 2" Checked="CollisionLevel2CheckBox_Checked" Unchecked="CollisionLevel2CheckBox_Unchecked"/>
+                        <CheckBox x:Name="CollisionLevel3CheckBox" Content="Level 3" Checked="CollisionLevel3CheckBox_Checked" Unchecked="CollisionLevel3CheckBox_Unchecked"/>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Left" Height="24" Margin="25,40,0,0" VerticalAlignment="Top" Width="272" Background="#FFDEDEDE" Orientation="Horizontal">
+                        <Label Content="Set level:"/>
+                        <Button x:Name="CollisionLevel1Button" Content="Level 1" Width="50" Click="CollisionLevel1Button_Click"/>
+                        <Button x:Name="CollisionLevel2Button" Content="Level 2" Width="50" Click="CollisionLevel2Button_Click"/>
+                        <Button x:Name="CollisionLevel3Button" Content="Level 3" Width="50" Click="CollisionLevel3Button_Click"/>
+                    </StackPanel>
+                </Grid>
+                <CheckBox x:Name="CollisionsPanelCheckBox" Content="Collisions" HorizontalAlignment="Left" VerticalAlignment="Top" Unchecked="CollisionsPanelCheckBox_Unchecked" Checked="CollisionsPanelCheckBox_Checked"/>
+            </Grid>
+            <StackPanel Grid.Column="2" HorizontalAlignment="Left" Height="22" Margin="16,76,0,0" VerticalAlignment="Top" Width="367" Background="White" Orientation="Horizontal">
+                <Label Content="Sprite dimensions on the map:" FontSize="9"/>
+                <TextBox x:Name="SpriteDimensionsOnTheMapWidth" Height="23" TextWrapping="Wrap" Text="75" Margin="0,0,0,-1" Width="60"/>
+                <Label Content="x"/>
+                <TextBox x:Name="SpriteDimensionsOnTheMapHeight" TextWrapping="Wrap" Text="75" Width="60"/>
+                <Button x:Name="AdjustImageBasedOnSprite" Content="Adjust based on sprite" Width="98" FontSize="8" Click="AdjustImageBasedOnSprite_Click"/>
+            </StackPanel>
+            <Grid Grid.Column="2" Margin="40,499,68,35">
+                <CheckBox x:Name="BackgroundCheckbox" Content="Background" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="BackgroundCheckBox_Checked" Unchecked="BackgroundCheckbox_Unchecked"/>
+                <Grid x:Name="BackgroundGrid" HorizontalAlignment="Left" Height="103" Margin="0,20,0,0" VerticalAlignment="Top" Width="292" Background="White">
+                    <Button x:Name="BackgroundPickImageButton" Content="BackgroundPickImageButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="179" Height="30" Click="BackgroundPickImageButton_Click"/>
+                    <Button x:Name="BackgroundDeleteImageButton" Content="BackgroundDeleteImageButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="179" Height="30" Margin="0,35,0,0" Click="BackgroundDeleteImageButton_Click"/>
+                    <Button x:Name="AdjustMapSizeToBackgroundSizeButton" Content="Adjust map size to background zise" HorizontalAlignment="Left" Margin="33,73,0,0" VerticalAlignment="Top" Width="259" Height="30" Click="AdjustMapSizeToBackgroundSizeButton_Click"/>
+                </Grid>
+            </Grid>
+            <Button x:Name="UndoButton" Content="Undo" Grid.Column="2" HorizontalAlignment="Left" Margin="307,10,0,0" VerticalAlignment="Top" Width="76" Click="UndoButton_Click" RenderTransformOrigin="4.211,-1.35"/>
+            <StackPanel Grid.Column="2" Margin="24,133,100,492" Orientation="Horizontal" Background="White" RenderTransformOrigin="0.591,-0.156">
+                <Label Content="Space between drawings" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" Width="156" Height="32"/>
+                <TextBox x:Name="SpaceBetweenDrawingsTextBox" HorizontalAlignment="Left" Height="32" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="120"/>
+            </StackPanel>
+            <CheckBox x:Name="StretchSpriteCheckbox" Content="Stretch sprite" Grid.Column="2" HorizontalAlignment="Left" Margin="300,113,0,0" VerticalAlignment="Top" Checked="StretchSpriteCheckbox_Checked" Unchecked="StretchSpriteCheckbox_Unchecked"/>
+            <StackPanel Grid.Column="2" Margin="200,102,119,529" Orientation="Horizontal">
+                <Label Content="Scale:" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.658,0.038"/>
+                <TextBox x:Name="SpriteScaleTextBox" TextWrapping="Wrap" Text="1.0" Width="35"/>
+            </StackPanel>
+            <Grid Grid.Column="2" Margin="24,218,17,301">
+                <StackPanel Margin="65,0,101,49" Orientation="Horizontal">
+                    <Label Content="Current tool:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <TextBox x:Name="currentToolTextBox" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="116" IsEnabled="False"/>
+                </StackPanel>
+                <Button x:Name="ChangeToolToImageDrawWIthRectangleButton" Content="Change tool to map image draw with rectangle" HorizontalAlignment="Left" Margin="0,50,0,0" VerticalAlignment="Top" Width="359" Height="25" Click="ChangeToolToImageDrawWIthRectangleButton_Click"/>
+                <Button x:Name="ChangeToolToImageDrawButton" Content="Change tool to map image draw" HorizontalAlignment="Left" Margin="31,26,0,0" VerticalAlignment="Top" Width="288" Height="19" Click="ChangeToolToImageDrawButton_Click"/>
+                <Label Content="Tool" HorizontalAlignment="Left" Margin="0,-5,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="ChangeToolToImagePropertiesButton" Content="Change tool to image properties" HorizontalAlignment="Left" Margin="0,80,0,0" VerticalAlignment="Top" Width="359" Height="25" Click="ChangeToolToImagePropertiesButton_Click"/>
+
+            </Grid>
+
+        </Grid>
+        <src:EnterNameUserControl x:Name="enterNameUserControl" Panel.ZIndex="100" Visibility="Hidden"/>
+        <src:EnterMapDimensionsUserControl x:Name="enterMapDimensionsUserControl" Panel.ZIndex="100" Visibility="Hidden"/>
+        <src:SpriteEditor x:Name="spriteEditorUserControl" Panel.ZIndex="100" Visibility="Hidden"/>
+
+        <Rectangle x:Name="currentCollisionMakerRectangle" Fill="#AAB6A225" Width="50" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top" MouseLeftButtonUp="currentCollisionMakerRectangle_MouseLeftButtonUp"/>
+        <Rectangle x:Name="currentMapPositionerRectangle" Fill="#AAB6A225" Width="50" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top" MouseLeftButtonUp="currentMapPositionerRectangle_MouseLeftButtonUp"/>
+        <Rectangle x:Name="currentMapRepositionerRectangle" Width="50" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#AA2553B6" MouseLeftButtonUp="currentMapRepositionerRectangle_MouseLeftButtonUp" Fill="#D8515151"/>
+        <Rectangle x:Name="currentMapRepositionerPointRectangle" Fill="#AAFF0000" Width="5" Height="5" Margin="-2, -2, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseLeftButtonUp="currentMapRepositionerPointRectangle_MouseLeftButtonUp" MouseLeftButtonDown="currentMapRepositionerPointRectangle_MouseLeftButtonDown"/>
+    </Grid>
+</Window>
